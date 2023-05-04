@@ -34,6 +34,9 @@ Follow the steps:
 
 CloudFront distribution domain name(URL): https://d35g9a1xvz4umh.cloudfront.net
 
+## Swagger Documentation
+https://2p4zbhnn6j.execute-api.us-east-2.amazonaws.com/swagger
+
 ## Available Scripts
 
 ### `client:deploy`
