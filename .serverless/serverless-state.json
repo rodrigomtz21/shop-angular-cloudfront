@@ -9,6 +9,29 @@
       "runtime": "nodejs12.x",
       "region": "us-east-2",
       "stage": "dev",
+      "environment": {
+        "PRODUCTS_TABLE": "products",
+        "STOCKS_TABLE": "stocks"
+      },
+      "iam": {
+        "role": {
+          "statements": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
+              "Resource": "arn:aws:dynamodb:us-east-2:*:*"
+            }
+          ]
+        }
+      },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -95,6 +118,12 @@
               "LogGroupName": "/aws/lambda/my-angular-shop-app-dev-getProductsById"
             }
           },
+          "CreateProductLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/my-angular-shop-app-dev-createProduct"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -151,6 +180,9 @@
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/my-angular-shop-app-dev-swagger-json:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][0]"
                       }
                     ]
                   }
@@ -179,13 +211,19 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-angular-shop-app/dev/1683164011073-2023-05-04T01:33:31.073Z/my-angular-shop-app.zip"
+                "S3Key": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z/my-angular-shop-app.zip"
               },
               "Handler": "lambdas/getProductsList.handler",
               "Runtime": "nodejs12.x",
               "FunctionName": "my-angular-shop-app-dev-getProductsList",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "PRODUCTS_TABLE": "products",
+                  "STOCKS_TABLE": "stocks"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": ["IamRoleLambdaExecution", "Arn"]
               }
@@ -199,18 +237,50 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-angular-shop-app/dev/1683164011073-2023-05-04T01:33:31.073Z/my-angular-shop-app.zip"
+                "S3Key": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z/my-angular-shop-app.zip"
               },
               "Handler": "lambdas/getProductsById.handler",
               "Runtime": "nodejs12.x",
               "FunctionName": "my-angular-shop-app-dev-getProductsById",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "PRODUCTS_TABLE": "products",
+                  "STOCKS_TABLE": "stocks"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": ["IamRoleLambdaExecution", "Arn"]
               }
             },
             "DependsOn": ["GetProductsByIdLogGroup"]
+          },
+          "CreateProductLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z/my-angular-shop-app.zip"
+              },
+              "Handler": "lambdas/createProduct.handler",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "my-angular-shop-app-dev-createProduct",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "PRODUCTS_TABLE": "products",
+                  "STOCKS_TABLE": "stocks"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": ["IamRoleLambdaExecution", "Arn"]
+              }
+            },
+            "DependsOn": ["CreateProductLogGroup"]
           },
           "SwaggerUILambdaFunction": {
             "Type": "AWS::Lambda::Function",
@@ -219,13 +289,19 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-angular-shop-app/dev/1683164011073-2023-05-04T01:33:31.073Z/my-angular-shop-app.zip"
+                "S3Key": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z/my-angular-shop-app.zip"
               },
               "Handler": "swagger/swagger-html.handler",
               "Runtime": "nodejs12.x",
               "FunctionName": "my-angular-shop-app-dev-swagger-ui",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "PRODUCTS_TABLE": "products",
+                  "STOCKS_TABLE": "stocks"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": ["IamRoleLambdaExecution", "Arn"]
               }
@@ -238,56 +314,72 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-angular-shop-app/dev/1683164011073-2023-05-04T01:33:31.073Z/my-angular-shop-app.zip"
+                "S3Key": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z/my-angular-shop-app.zip"
               },
               "Handler": "swagger/swagger-json.handler",
               "Runtime": "nodejs12.x",
               "FunctionName": "my-angular-shop-app-dev-swagger-json",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "PRODUCTS_TABLE": "products",
+                  "STOCKS_TABLE": "stocks"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": ["IamRoleLambdaExecution", "Arn"]
               }
             }
           },
-          "GetProductsListLambdaVersionNMDFIZMj6SN4ieYYV3pzLxwB1ZQHrtHaDw3wtSjo": {
+          "GetProductsListLambdaVersiontByb2kA6lF2k8zGDy9e1ykM5jOSI69keSmH8JPt6M": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetProductsListLambdaFunction"
               },
-              "CodeSha256": "8rxidlKpud8y6/p3SpdI/futibU5BBn7KwtXQISyBOY="
+              "CodeSha256": "1VeZLsk/fWGQ8nUvLEVNQYoXy/PtnpVyHBfQ50gc9aQ="
             }
           },
-          "GetProductsByIdLambdaVersionkc3UCoqKh0owHbQykoiC7kLvCGUJjI9v8YOSr9rVs": {
+          "GetProductsByIdLambdaVersionnslxdFWscDDDG3yior99Y8RrlOjfxlsrqDYelwiG4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetProductsByIdLambdaFunction"
               },
-              "CodeSha256": "8rxidlKpud8y6/p3SpdI/futibU5BBn7KwtXQISyBOY="
+              "CodeSha256": "1VeZLsk/fWGQ8nUvLEVNQYoXy/PtnpVyHBfQ50gc9aQ="
             }
           },
-          "SwaggerUILambdaVersionjtM6Xyp7jRiLhN0fj95xGug4MtJHk8WEI7UJj2hGbE": {
+          "CreateProductLambdaVersionRMEPjsqS4RGYHSYWYRA3hX1yMbsvvYFhgtOSXsi2M": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateProductLambdaFunction"
+              },
+              "CodeSha256": "1VeZLsk/fWGQ8nUvLEVNQYoXy/PtnpVyHBfQ50gc9aQ="
+            }
+          },
+          "SwaggerUILambdaVersionl1SKGDbMqUuIRE0MO7wkOksrsdxd5iaCaWaiIsGQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SwaggerUILambdaFunction"
               },
-              "CodeSha256": "8rxidlKpud8y6/p3SpdI/futibU5BBn7KwtXQISyBOY="
+              "CodeSha256": "1VeZLsk/fWGQ8nUvLEVNQYoXy/PtnpVyHBfQ50gc9aQ="
             }
           },
-          "SwaggerJSONLambdaVersionOMzOWZct7OiC2aY4ifC3wsUcXEEERDC4ne03Ov2argE": {
+          "SwaggerJSONLambdaVersionANvUI01HzDXzZ23ONN6njOHOgFKXvaRwZ0YfwRxpUc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SwaggerJSONLambdaFunction"
               },
-              "CodeSha256": "8rxidlKpud8y6/p3SpdI/futibU5BBn7KwtXQISyBOY="
+              "CodeSha256": "1VeZLsk/fWGQ8nUvLEVNQYoXy/PtnpVyHBfQ50gc9aQ="
             }
           },
           "ApiGatewayRestApi": {
@@ -406,7 +498,48 @@
             },
             "DependsOn": ["GetProductsByIdLambdaPermissionApiGateway"]
           },
-          "ApiGatewayDeployment1683164003907": {
+          "ApiGatewayMethodProductsPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceProducts"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": ["CreateProductLambdaFunction", "Arn"]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": ["CreateProductLambdaPermissionApiGateway"]
+          },
+          "ApiGatewayDeployment1683754496775": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -416,7 +549,8 @@
             },
             "DependsOn": [
               "ApiGatewayMethodProductsGet",
-              "ApiGatewayMethodProductsIdVarGet"
+              "ApiGatewayMethodProductsIdVarGet",
+              "ApiGatewayMethodProductsPost"
             ]
           },
           "GetProductsListLambdaPermissionApiGateway": {
@@ -458,6 +592,40 @@
             "Properties": {
               "FunctionName": {
                 "Fn::GetAtt": ["GetProductsByIdLambdaFunction", "Arn"]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "CreateProductLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": ["CreateProductLambdaFunction", "Arn"]
               },
               "Action": "lambda:InvokeFunction",
               "Principal": "apigateway.amazonaws.com",
@@ -760,7 +928,7 @@
           "GetProductsListLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetProductsListLambdaVersionNMDFIZMj6SN4ieYYV3pzLxwB1ZQHrtHaDw3wtSjo"
+              "Ref": "GetProductsListLambdaVersiontByb2kA6lF2k8zGDy9e1ykM5jOSI69keSmH8JPt6M"
             },
             "Export": {
               "Name": "sls-my-angular-shop-app-dev-GetProductsListLambdaFunctionQualifiedArn"
@@ -769,16 +937,25 @@
           "GetProductsByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetProductsByIdLambdaVersionkc3UCoqKh0owHbQykoiC7kLvCGUJjI9v8YOSr9rVs"
+              "Ref": "GetProductsByIdLambdaVersionnslxdFWscDDDG3yior99Y8RrlOjfxlsrqDYelwiG4"
             },
             "Export": {
               "Name": "sls-my-angular-shop-app-dev-GetProductsByIdLambdaFunctionQualifiedArn"
             }
           },
+          "CreateProductLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateProductLambdaVersionRMEPjsqS4RGYHSYWYRA3hX1yMbsvvYFhgtOSXsi2M"
+            },
+            "Export": {
+              "Name": "sls-my-angular-shop-app-dev-CreateProductLambdaFunctionQualifiedArn"
+            }
+          },
           "SwaggerUILambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SwaggerUILambdaVersionjtM6Xyp7jRiLhN0fj95xGug4MtJHk8WEI7UJj2hGbE"
+              "Ref": "SwaggerUILambdaVersionl1SKGDbMqUuIRE0MO7wkOksrsdxd5iaCaWaiIsGQ"
             },
             "Export": {
               "Name": "sls-my-angular-shop-app-dev-SwaggerUILambdaFunctionQualifiedArn"
@@ -787,7 +964,7 @@
           "SwaggerJSONLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SwaggerJSONLambdaVersionOMzOWZct7OiC2aY4ifC3wsUcXEEERDC4ne03Ov2argE"
+              "Ref": "SwaggerJSONLambdaVersionANvUI01HzDXzZ23ONN6njOHOgFKXvaRwZ0YfwRxpUc"
             },
             "Export": {
               "Name": "sls-my-angular-shop-app-dev-SwaggerJSONLambdaFunctionQualifiedArn"
@@ -1004,7 +1181,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetProductsListLambdaVersionNMDFIZMj6SN4ieYYV3pzLxwB1ZQHrtHaDw3wtSjo"
+        "versionLogicalId": "GetProductsListLambdaVersiontByb2kA6lF2k8zGDy9e1ykM5jOSI69keSmH8JPt6M"
       },
       "getProductsById": {
         "handler": "lambdas/getProductsById.handler",
@@ -1035,7 +1212,39 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetProductsByIdLambdaVersionkc3UCoqKh0owHbQykoiC7kLvCGUJjI9v8YOSr9rVs"
+        "versionLogicalId": "GetProductsByIdLambdaVersionnslxdFWscDDDG3yior99Y8RrlOjfxlsrqDYelwiG4"
+      },
+      "createProduct": {
+        "handler": "lambdas/createProduct.handler",
+        "events": [
+          {
+            "http": {
+              "path": "products",
+              "method": "post",
+              "bodyType": "Product",
+              "responses": {
+                "200": {
+                  "description": "Successful API response",
+                  "bodyType": "SuccessfulResponse"
+                },
+                "500": {
+                  "description": "Failed API response",
+                  "bodyType": "ErrorResponse"
+                }
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "my-angular-shop-app-dev-createProduct",
+        "package": {
+          "artifact": ".serverless\\my-angular-shop-app.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "CreateProductLambdaVersionRMEPjsqS4RGYHSYWYRA3hX1yMbsvvYFhgtOSXsi2M"
       },
       "swaggerUI": {
         "name": "my-angular-shop-app-dev-swagger-ui",
@@ -1058,7 +1267,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "SwaggerUILambdaVersionjtM6Xyp7jRiLhN0fj95xGug4MtJHk8WEI7UJj2hGbE"
+        "versionLogicalId": "SwaggerUILambdaVersionl1SKGDbMqUuIRE0MO7wkOksrsdxd5iaCaWaiIsGQ"
       },
       "swaggerJSON": {
         "name": "my-angular-shop-app-dev-swagger-json",
@@ -1081,7 +1290,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "SwaggerJSONLambdaVersionOMzOWZct7OiC2aY4ifC3wsUcXEEERDC4ne03Ov2argE"
+        "versionLogicalId": "SwaggerJSONLambdaVersionANvUI01HzDXzZ23ONN6njOHOgFKXvaRwZ0YfwRxpUc"
       }
     },
     "resources": {
@@ -1219,6 +1428,9 @@
         },
         "getProductsById": {
           "$ref": "$[\"service\"][\"functions\"][\"getProductsById\"]"
+        },
+        "createProduct": {
+          "$ref": "$[\"service\"][\"functions\"][\"createProduct\"]"
         }
       },
       "custom": {
@@ -1232,7 +1444,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/my-angular-shop-app/dev/1683164011073-2023-05-04T01:33:31.073Z",
+    "artifactDirectoryName": "serverless/my-angular-shop-app/dev/1683754513587-2023-05-10T21:35:13.587Z",
     "artifact": ""
   }
 }
