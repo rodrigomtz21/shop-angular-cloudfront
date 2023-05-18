@@ -17,52 +17,10 @@ provider:
   #profile: AWSPractitioner  #RER-DEV #TODO put the root profiles keys as default
 
 plugins:
-  - serverless-auto-swagger
-  - serverless-webpack
   - serverless-finch
   - serverless-single-page-app-plugin
 
-## Lambda functions configuration
-functions:  
-  getProductsList:
-    handler: lambdas/getProductsList.handler
-    events:
-    - http:
-        path: products
-        method: get
-        responses:
-          200:
-            description: 'Successful API response'
-            bodyType: 'Products'
-          500:
-            description: 'Failed API response'
-            bodyType: 'ErrorResponse'
-  getProductsById:
-    handler: lambdas/getProductsById.handler
-    events:
-    - http:
-        path: products/{id}
-        method: get
-        responses:
-          200:
-            description: 'Successful API response'
-            bodyType: 'Product'
-          500:
-            description: 'Failed API response'
-            bodyType: 'ErrorResponse'
-
-
 custom:
-  ## Serverless webpack configuration
-  webpack:
-    webpackConfig: 'webpack.config.js' # Name of webpack configuration file
-    includeModules: false # Node modules configuration for packaging
-    packager: 'npm' # Packager that will be used to package your external modules
-
-  ## Serverless openapi configuration
-  autoswagger:
-    typefiles: [./src/types/product-types.d.ts]
-
   ## Serverless-finch configuration
   client:
     bucketName: js-ltm-shop-angular-cloudfront-01 #TIP put the name of your bucketName this should be unique globally
