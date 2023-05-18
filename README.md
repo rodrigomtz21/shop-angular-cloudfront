@@ -32,10 +32,11 @@ Follow the steps:
 
 ##Serverless
 
-CloudFront distribution domain name(URL): https://d35g9a1xvz4umh.cloudfront.net
+CloudFront distribution domain name(URL): https://d2dmnu07cyfwwo.cloudfront.net/
 
 ## Swagger Documentation
-https://2p4zbhnn6j.execute-api.us-east-2.amazonaws.com/swagger
+
+https://e17wwuogs1.execute-api.us-east-2.amazonaws.com/swagger
 
 ## Available Scripts
 
