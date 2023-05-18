@@ -29,3 +29,26 @@ Follow the steps:
 - git clone
 - npm i
 - ng serve
+
+##Serverless
+
+CloudFront distribution domain name(URL): https://d35g9a1xvz4umh.cloudfront.net
+s3 bucket url: https://js-ltm-shop-angular-cloudfront-01.s3.us-east-2.amazonaws.com/index.html
+
+## Available Scripts
+
+### `client:deploy`
+
+Deploy static site.
+
+### `cloudfront:setup`
+
+Deploy static site and configure cloud front.
+
+### `cloudfront:invalidateCache`
+
+Invalidate CloudFront cache.
+
+### `client:build:deploy`
+
+Build app and serverless deploy generated files
