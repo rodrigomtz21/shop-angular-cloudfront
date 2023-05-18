@@ -22,7 +22,6 @@ plugins:
 
 custom:
   ## Serverless-finch configuration
-
   client:
     bucketName: js-ltm-shop-angular-cloudfront-01 #TIP put the name of your bucketName this should be unique globally
     distributionFolder: dist/app/ #TIP this is the folder to upload

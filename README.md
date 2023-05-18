@@ -35,6 +35,10 @@ Follow the steps:
 CloudFront distribution domain name(URL): https://d35g9a1xvz4umh.cloudfront.net
 s3 bucket url: https://js-ltm-shop-angular-cloudfront-01.s3.us-east-2.amazonaws.com/index.html
 
+## Swagger Documentation
+
+https://e17wwuogs1.execute-api.us-east-2.amazonaws.com/swagger
+
 ## Available Scripts
 
 ### `client:deploy`

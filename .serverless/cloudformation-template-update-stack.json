@@ -107,19 +107,7 @@
               "Effect": "Allow",
               "Action": "s3:GetObject",
               "Resource": "arn:aws:s3:::js-ltm-shop-angular-cloudfront-01/*",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    " ",
-                    [
-                      "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity",
-                      {
-                        "Ref": "OriginAccessIdentity"
-                      }
-                    ]
-                  ]
-                }
-              }
+              "Principal": "*"
             }
           ]
         }

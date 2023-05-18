@@ -119,19 +119,7 @@
                     "Effect": "Allow",
                     "Action": "s3:GetObject",
                     "Resource": "arn:aws:s3:::js-ltm-shop-angular-cloudfront-01/*",
-                    "Principal": {
-                      "AWS": {
-                        "Fn::Join": [
-                          " ",
-                          [
-                            "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity",
-                            {
-                              "Ref": "OriginAccessIdentity"
-                            }
-                          ]
-                        ]
-                      }
-                    }
+                    "Principal": "*"
                   }
                 ]
               }
@@ -353,19 +341,7 @@
                   "Effect": "Allow",
                   "Action": "s3:GetObject",
                   "Resource": "arn:aws:s3:::js-ltm-shop-angular-cloudfront-01/*",
-                  "Principal": {
-                    "AWS": {
-                      "Fn::Join": [
-                        " ",
-                        [
-                          "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity",
-                          {
-                            "Ref": "OriginAccessIdentity"
-                          }
-                        ]
-                      ]
-                    }
-                  }
+                  "Principal": "*"
                 }
               ]
             }
@@ -467,7 +443,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/my-angular-shop-app/dev/1682705227904-2023-04-28T18:07:07.904Z",
+    "artifactDirectoryName": "serverless/my-angular-shop-app/dev/1684374002127-2023-05-18T01:40:02.127Z",
     "artifact": ""
   }
 }
